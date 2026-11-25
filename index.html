@@ -237,8 +237,6 @@ html:not(.effects-off) #stranger .fire-lit .scene-air.sparks{display:block;left:
 @keyframes fire-spark{from{opacity:0}25%{opacity:.95}to{opacity:0;transform:translate(8px,-40px)}}
 @keyframes fire-glow{from{opacity:.1}to{opacity:.85}}
 </style><style>
-#embeddedArts{display:none}.scroll-only #embeddedArts{display:block;align-self:flex-end;font:inherit;font-size:.8rem;color:#584958;background:transparent;border:0;text-decoration:underline;cursor:pointer}
-.scroll-only #editorPanel:not([hidden]){display:block!important;position:fixed;top:6px;left:2%;right:2%;z-index:9999;max-height:72vh;overflow:auto;margin:0}
 #assetPreview{display:block;object-fit:contain;margin:.4rem 0}#assetChoice{max-width:100%}
 </style><style>
 .folio-ready #origins-story .tribe-spread{display:block;min-height:0}
@@ -394,7 +392,7 @@ html:not(.effects-off) #stranger .fire-lit .scene-air.sparks{display:block;left:
 
 
 
-<button type="button" id="embeddedArts" aria-controls="editorPanel" aria-expanded="false">Замена артов</button><nav aria-label="Листание страниц" class="folio-controls"><button aria-label="Предыдущая страница" id="folioPrev" type="button" disabled=""><span aria-hidden="true">←</span> <span>Назад</span></button><div class="folio-progress"><span aria-live="polite" id="folioCount">1 / 8</span><span class="folio-dots" id="folioDots"></span></div><button aria-label="Следующая страница" id="folioNext" type="button"><span>Далее</span> <span aria-hidden="true">→</span></button></nav></div>
+<nav aria-label="Листание страниц" class="folio-controls"><button aria-label="Предыдущая страница" id="folioPrev" type="button" disabled=""><span aria-hidden="true">←</span> <span>Назад</span></button><div class="folio-progress"><span aria-live="polite" id="folioCount">1 / 8</span><span class="folio-dots" id="folioDots"></span></div><button aria-label="Следующая страница" id="folioNext" type="button"><span>Далее</span> <span aria-hidden="true">→</span></button></nav></div>
 </article>
 <div aria-hidden="true" class="roller roller-bottom"></div>
 </main>
@@ -421,6 +419,10 @@ for(let i=0;i<(self===top?16:0);i++){const f=document.createElement('i');f.class
 setEffects(effects);$('#toggleEffects').addEventListener('click',()=>setEffects(!effects));media.addEventListener('change',()=>setEffects(!media.matches));
 document.addEventListener('visibilitychange',()=>root.classList.toggle('page-hidden',document.hidden));
 if('IntersectionObserver'in window){const io=new IntersectionObserver(items=>items.forEach(item=>{if(item.isIntersecting){if(effects)item.target.classList.add('in-view');io.unobserve(item.target)}}),{threshold:.1});$$('.illustration,.gallery button').forEach(e=>io.observe(e));}
+if(self!==top){
+  $('#editorPanel').remove();
+  $('#openTools').remove();
+}else{
 $('#openTools').addEventListener('click',()=>{const open=$('#editorPanel').hidden;$('#editorPanel').hidden=!open;$('#openTools').setAttribute('aria-expanded',String(open));reportSize()});
 function setEditing(on){editing=on;body.classList.toggle('editing',on);fields.forEach(el=>{if(on){el.setAttribute('contenteditable','true');el.spellcheck=true}else{el.removeAttribute('contenteditable');el.removeAttribute('spellcheck')}});$('#editMode').setAttribute('aria-pressed',String(on));$('#editMode').textContent=on?'Завершить правку':'Править текст';}
 $('#editMode').addEventListener('click',()=>{setEditing(!editing);status(editing?'Нажмите на текст с пунктирной рамкой. Изменения ещё не экспортированы.':'Режим чтения. Экспортируйте HTML, чтобы сохранить изменения в файле.')});
@@ -435,20 +437,10 @@ const choice=$('#assetChoice');
 function previewArt(){ $('#assetPreview').src=document.querySelector('img[data-asset="'+choice.value+'"]').src }
 choice.addEventListener('change',previewArt);
 choice.closest('details').addEventListener('toggle',()=>{if(choice.closest('details').open)previewArt()});
-$('#embeddedArts').addEventListener('click',()=>{
- const panel=$('#editorPanel');
- panel.hidden=!panel.hidden;
- $('#embeddedArts').setAttribute('aria-expanded',String(!panel.hidden));
- if(!panel.hidden){
-   const art=document.querySelector('.folio-page:not([hidden]) img[data-asset]');
-   if(art)choice.value=art.dataset.asset;
-   choice.closest('details').open=true;
-   previewArt();
- }
-});
 $('#replaceArt').addEventListener('change',async e=>{const asset=choice.value;const file=e.target.files?.[0];if(!file)return;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>8*1024*1024){status('Нужен PNG, JPEG или WebP размером до 8 МБ.');e.target.value='';return}try{const url=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});const probe=new Image();probe.src=url;await probe.decode();$$(`img[data-asset="${asset}"]`).forEach(img=>{img.removeAttribute("data-motion");img.removeAttribute("srcset");img.src=url;img.width=probe.naturalWidth;img.height=probe.naturalHeight});previewArt();markDirty();status('Рисунок заменён. Сохраните его через «Экспорт HTML».')}catch{status('Не удалось прочитать изображение. Выберите другой файл.')}e.target.value=''});
-$('#saveHtml').addEventListener('click',()=>{const clone=root.cloneNode(true);clone.removeAttribute('style');clone.className='';clone.querySelector('body').className='';clone.querySelectorAll('[data-editable]').forEach(el=>{el.innerHTML=cleanMarkup(el.innerHTML);el.removeAttribute('contenteditable');el.removeAttribute('spellcheck')});clone.querySelectorAll('.in-view,.art-visible,.folio-enter').forEach(el=>el.classList.remove('in-view','art-visible','folio-enter'));clone.querySelectorAll('.ink-weather').forEach(el=>el.remove());clone.querySelectorAll('.folio-page').forEach(el=>el.removeAttribute('hidden'));clone.querySelector('#folioDots').replaceChildren();clone.querySelector('#paper').removeAttribute('style');clone.querySelector('#snowLayer').replaceChildren();clone.querySelector('#galleryModal').removeAttribute('open');clone.querySelectorAll('[data-scene]').forEach(img=>img.removeAttribute('srcset'));clone.querySelector('.water-ripple')?.remove();clone.querySelector('#modalImage').removeAttribute('src');clone.querySelector('#modalCaption').textContent='';clone.querySelector('#modalCount').textContent='';clone.querySelector('#editorPanel').hidden=true;clone.querySelector('#assetPreview').removeAttribute('src');clone.querySelector('#embeddedArts').setAttribute('aria-expanded','false');clone.querySelector('#openTools').setAttribute('aria-expanded','false');clone.querySelector('#editMode').setAttribute('aria-pressed','false');clone.querySelector('#editMode').textContent='Править текст';clone.querySelector('#editStatus').textContent='Текст можно редактировать после включения режима правки.';clone.querySelector('#toggleEffects').setAttribute('aria-pressed','true');clone.querySelector('#toggleEffects').textContent='Атмосфера: вкл.';const blob=new Blob(['<!doctype html>\n',clone.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='index.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);dirty=false;status('HTML подготовлен к скачиванию. Публикация: замените файл на хостинге.');});
+$('#saveHtml').addEventListener('click',()=>{const clone=root.cloneNode(true);clone.removeAttribute('style');clone.className='';clone.querySelector('body').className='';clone.querySelectorAll('[data-editable]').forEach(el=>{el.innerHTML=cleanMarkup(el.innerHTML);el.removeAttribute('contenteditable');el.removeAttribute('spellcheck')});clone.querySelectorAll('.in-view,.art-visible,.folio-enter').forEach(el=>el.classList.remove('in-view','art-visible','folio-enter'));clone.querySelectorAll('.ink-weather').forEach(el=>el.remove());clone.querySelectorAll('.folio-page').forEach(el=>el.removeAttribute('hidden'));clone.querySelector('#folioDots').replaceChildren();clone.querySelector('#paper').removeAttribute('style');clone.querySelector('#snowLayer').replaceChildren();clone.querySelector('#galleryModal').removeAttribute('open');clone.querySelectorAll('[data-scene]').forEach(img=>img.removeAttribute('srcset'));clone.querySelector('.water-ripple')?.remove();clone.querySelector('#modalImage').removeAttribute('src');clone.querySelector('#modalCaption').textContent='';clone.querySelector('#modalCount').textContent='';clone.querySelector('#editorPanel').hidden=true;clone.querySelector('#assetPreview').removeAttribute('src');clone.querySelector('#openTools').setAttribute('aria-expanded','false');clone.querySelector('#editMode').setAttribute('aria-pressed','false');clone.querySelector('#editMode').textContent='Править текст';clone.querySelector('#editStatus').textContent='Текст можно редактировать после включения режима правки.';clone.querySelector('#toggleEffects').setAttribute('aria-pressed','true');clone.querySelector('#toggleEffects').textContent='Атмосфера: вкл.';const blob=new Blob(['<!doctype html>\n',clone.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='index.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);dirty=false;status('HTML подготовлен к скачиванию. Публикация: замените файл на хостинге.');});
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+}
 // Optional parent bridge: configured exact origin, strict source and message checks.
 const allowedParent=$('meta[name="solomon-parent-origin"]')?.content||'';
 let connected=false,lastHeight=0,sizePending=false;
