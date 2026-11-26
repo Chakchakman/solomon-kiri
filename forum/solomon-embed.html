@@ -1,0 +1,30 @@
+<style>
+@media (max-width: 767px) {
+  .Post-body iframe[src^="https://chakchakman.github.io/solomon-kiri/chapters/"] {
+    display:block; width:100%; height:min(800px,85vh); height:min(800px,85svh); border:0;
+  }
+}
+</style>
+<script>
+(() => {
+  const origin = 'https://chakchakman.github.io';
+  const frames = 'iframe[src^="' + origin + '/solomon-kiri/chapters/"]';
+  const root = document.documentElement;
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  function send(frame) {
+    const selected = root.getAttribute('data-theme') || 'auto';
+    const dark = selected.startsWith('dark') || (!selected.startsWith('light') && system.matches);
+    frame.contentWindow?.postMessage({type:'solomon:theme', scheme:dark ? 'dark' : 'light'}, origin);
+  }
+  function sync() { document.querySelectorAll(frames).forEach(send); }
+  window.addEventListener('message', event => {
+    if (event.origin !== origin || event.data !== 'solomon:ready') return;
+    for (const frame of document.querySelectorAll(frames)) {
+      if (event.source === frame.contentWindow) send(frame);
+    }
+  });
+  new MutationObserver(sync).observe(root, {attributes:true, attributeFilter:['data-theme']});
+  system.addEventListener('change', sync);
+  sync();
+})();
+</script>

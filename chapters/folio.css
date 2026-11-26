@@ -1,5 +1,6 @@
 :root {
   --ink:#242632; --paper:#f8f1e4; --plum:#443949; --line:#d2c6b7; --accent:#a14f26;
+  color-scheme:light dark; -webkit-text-size-adjust:100%; text-size-adjust:100%;
   color:var(--ink); background:var(--paper); font:16px/1.5 system-ui,sans-serif;
 }
 * { box-sizing:border-box }
@@ -122,6 +123,7 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
   .air,.scene-film,.motion-ready .scene-action { display:none }
 }
 
+/* Safari versions before container units receive the measured reading height. */
 /* Use the reading pane as the height reference, excluding both navigation bars. */
 .forum-embed:is([data-page="beginning"],[data-page="face"]) #reader { container-type:size }
 .forum-embed :is(.cover,.portrait):not([hidden]) {
@@ -136,6 +138,7 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
   top:0;
   align-self:start;
   min-height:0;
+  height:var(--reader-height,100vh);
   height:100cqh;
 }
 .forum-embed :is(.cover,.portrait) .panel img { height:100%; object-fit:cover }
@@ -172,4 +175,49 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
   header { flex-wrap:wrap; gap:0 8px }
   header .soundtrack:not([hidden]) { order:1; flex-basis:100%; justify-content:space-between; margin:0; border-top:1px solid var(--line) }
   header .music-toggle { font-size:13px; padding-block:7px }
+}
+
+/* The embedding page supplies its selected color scheme to this media query. */
+:root[data-scheme="dark"] { --paper:#211e23; --ink:#f5ecdf; --accent:#eab081; --line:#655a60 }
+:where(html[data-scheme="dark"]) #beginning,:where(html[data-scheme="dark"]) body[data-page="beginning"] { --paper:#292220; --ink:#faeddf; --accent:#f3b889; --mat:#382b26 }
+:where(html[data-scheme="dark"]) #face,:where(html[data-scheme="dark"]) body[data-page="face"] { --paper:#202335; --ink:#ececff; --accent:#bcc5ff; --mat:#30344b }
+:where(html[data-scheme="dark"]) #temper,:where(html[data-scheme="dark"]) body[data-page="temper"] { --paper:#2c222b; --ink:#f8eaf2; --accent:#f2aacb; --mat:#392c38 }
+:where(html[data-scheme="dark"]) #temper-gear,:where(html[data-scheme="dark"]) body[data-page="temper-gear"] { --paper:#222728; --ink:#eaf0ef; --accent:#b2d2d8; --mat:#303637 }
+:where(html[data-scheme="dark"]) #origins,:where(html[data-scheme="dark"]) body[data-page="origins"] { --paper:#1c2a31; --ink:#e6f2f8; --accent:#9ed8ef; --mat:#283b44 }
+:where(html[data-scheme="dark"]) #origins-story,:where(html[data-scheme="dark"]) body[data-page="origins-story"] { --paper:#202a24; --ink:#e6f1e6; --accent:#abd2ae; --mat:#2b3930 }
+:where(html[data-scheme="dark"]) #stranger,:where(html[data-scheme="dark"]) body[data-page="stranger"] { --paper:#242130; --ink:#f6ede2; --accent:#ffbe84; --mat:#1c1a26 }
+:where(html[data-scheme="dark"]) #path,:where(html[data-scheme="dark"]) body[data-page="path"] { --paper:#27291d; --ink:#f1f1dc; --accent:#cbd88f; --mat:#343825 }
+:where(html[data-scheme="dark"]) dt { color:#d1c6ce }
+@supports not (color:color-mix(in srgb,black,white)) {
+  body { --line:#b5a99f }
+  html[data-scheme="dark"] body { --line:#635c65 }
+}
+@media(max-width:480px) {
+  header,footer { padding-inline:clamp(8px,3vw,14px) }
+  #contents,.music-toggle,.volume,.volume input,.menu-head button,dialog li a { min-height:44px }
+  #contents { padding-inline:6px; font-size:13px }
+  header .music-toggle { padding-inline:3px; white-space:nowrap }
+  .soundtrack .artist { display:none }
+  .volume input { width:clamp(62px,22vw,90px) }
+  footer { min-height:48px }
+  footer nav { display:none }
+  footer button { min-width:76px; min-height:44px; padding-inline:10px }
+  footer button span { display:inline }
+  #count { letter-spacing:.08em }
+  dialog { width:calc(100% - 24px); max-height:calc(100% - 24px); padding:12px 16px }
+  .menu-head button { min-width:44px }
+  .copy { overflow-wrap:break-word; hyphens:auto }
+  .forum-embed .cover { grid-template-columns:34% minmax(0,1fr) }
+  .forum-embed .portrait { grid-template-columns:minmax(0,1fr) 32% }
+  .forum-embed :is(.cover,.portrait) .copy { padding-block:16px }
+  .forum-embed .cover h1 { font-size:clamp(26px,7.6vw,34px) }
+  .forum-embed .cover dl { gap:5px }
+  .forum-embed .portrait .copy p:not(.kicker) { line-height:1.5 }
+  .wide .copy { padding:19px clamp(14px,4.8vw,22px) }
+}
+@media(orientation:landscape) and (max-height:440px) and (max-width:760px) {
+  header { flex-wrap:nowrap; min-height:44px }
+  header .soundtrack:not([hidden]) { order:0; flex-basis:auto; margin-left:auto; border:0; gap:7px }
+  .soundtrack .artist { display:none }
+  footer { min-height:44px }
 }

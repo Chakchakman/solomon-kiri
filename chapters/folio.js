@@ -26,12 +26,37 @@ function show(index) {
 function fromHash() {
   show(pages.findIndex(page => '#' + page.id === location.hash));
 }
+const scheme = matchMedia('(prefers-color-scheme: dark)');
+let forumScheme;
+function applyScheme() {
+  const selected = forumScheme || (scheme.matches ? 'dark' : 'light');
+  document.documentElement.dataset.scheme = selected;
+  document.documentElement.style.colorScheme = selected;
+}
+applyScheme();
+scheme.addEventListener('change', applyScheme);
 if (window.parent !== window) {
   const parentURL = location.ancestorOrigins?.[0] || document.referrer;
   const host = /^https?:\/\//i.test(parentURL) ? new URL(parentURL).hostname : '';
   const forum = host === 'zamorie.com' || host.endsWith('.zamorie.com');
   const markedEmbed = !host && new URLSearchParams(location.search).get('embed') === 'forum';
   document.body.classList.toggle('forum-embed', forum || markedEmbed);
+  if (forum || markedEmbed) {
+    window.addEventListener('message', event => {
+      if (event.source !== window.parent || !/^https:\/\/(?:[a-z0-9-]+\.)*zamorie\.com$/i.test(event.origin)) return;
+      const message = event.data;
+      if (message?.type !== 'solomon:theme' || !['light','dark'].includes(message.scheme)) return;
+      forumScheme = message.scheme;
+      applyScheme();
+    });
+    window.parent.postMessage('solomon:ready', forum ? new URL(parentURL).origin : 'https://zamorie.com');
+  }
+}
+if (document.body.classList.contains('forum-embed') && !CSS.supports('height', '1cqh')) {
+  const resize = new ResizeObserver(() => {
+    reader.style.setProperty('--reader-height', reader.clientHeight + 'px');
+  });
+  resize.observe(reader);
 }
 document.body.classList.add('ready');
 fromHash();
