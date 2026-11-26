@@ -2,8 +2,15 @@
 <html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Соломон Кири · Иллюстрированная летопись</title>
-<link rel="stylesheet" href="folio.css?v=still2"><script defer src="folio.js?v=motion1"></script><script defer src="scenes.js?v=still2"></script></head>
-<body><header><div class="mast"><i aria-hidden="true"></i>Летопись Соломона Кири</div><button id="contents" type="button" aria-haspopup="dialog">Оглавление <b aria-hidden="true">☰</b></button></header>
+<link rel="stylesheet" href="folio.css?v=music1"><script defer src="folio.js?v=motion1"></script><script defer src="scenes.js?v=still2"></script><script defer src="music.js"></script></head>
+<body><header><div class="mast"><i aria-hidden="true"></i>Летопись Соломона Кири</div>
+<div class="soundtrack" role="group" aria-label="Музыка летописи" hidden>
+  <button class="music-toggle" type="button" aria-label="Включить Woodkid — Run Boy Run"><span class="play-icon" aria-hidden="true">▶</span> Woodkid — Run Boy Run</button>
+  <label class="volume">Громкость <input id="volume" type="range" min="0" max="100" value="30" aria-label="Громкость музыки" aria-valuetext="30 %"></label>
+  <audio id="soundtrack" preload="none" src="audio/run-boy-run.mp3"></audio>
+  <span class="music-error" role="status"></span>
+</div>
+<button id="contents" type="button" aria-haspopup="dialog">Оглавление <b aria-hidden="true">☰</b></button></header>
 <main id="reader" tabindex="0" aria-label="Страница летописи">
 <section id="beginning" class="spread cover" aria-label="Соломон «Сол» Кири">
 <!-- Арт 1.1 — Взгляд Сола через плечо -->
@@ -71,6 +78,7 @@
 <div class="copy"><p class="kicker">Глава пятая</p><h2>За пределами племени</h2>
 <p>Восстановившись, наш герой собрал кое-какие пожитки и просто покинул племя, дабы изучить этот огромный, прежде неизведанный мир и однажды взять реванш у своего обидчика.</p>
 <p>Однако долго странствовать по миру в одиночку и без средств было тяжело даже для такого умелого, хоть и небольшого воина, как Сол. После одной из драк в какой-то деревенской таверне мальчишка услышал об опорном пункте для странников и разных интересных, а главное — сильных людей. Недолго думая, он отправился в дальний путь, не зная, что ждёт его в конце.</p>
+<button class="journey-music" type="button" hidden><span class="play-icon" aria-hidden="true">▶</span> <span class="journey-label">В путь</span></button>
 <a class="restart" href="#beginning">К началу летописи ↑</a></div>
 </section>
 </main><footer><button id="back" type="button" aria-label="Предыдущая страница">← <span>Назад</span></button><nav aria-label="Страницы"><a href="#beginning" aria-label="1. Соломон «Сол» Кири"></a><a href="#face" aria-label="2. Лик синего демона"></a><a href="#temper" aria-label="3. Нрав, острый как клык"></a><a href="#temper-gear" aria-label="4. Сила и острый язык"></a><a href="#origins" aria-label="5. Холодные выси"></a><a href="#origins-story" aria-label="6. Среди синих демонов"></a><a href="#stranger" aria-label="7. Незваный гость"></a><a href="#path" aria-label="8. За пределами племени"></a></nav><output aria-live="polite" id="count">01 / 08</output><button id="next" type="button" aria-label="Следующая страница"><span>Далее</span> →</button></footer>

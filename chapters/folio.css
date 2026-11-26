@@ -96,20 +96,12 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
 .study .spikes { background-position:85% 18% }
 .study .bell { background-position:0% 100% }
 
-@media(min-width:800px) {
-  body:not(.forum-embed) #temper { grid-template-columns:44% 56%; align-content:stretch }
-  body:not(.forum-embed) #temper .panel { position:relative }
-  body:not(.forum-embed) #temper .panel img { position:absolute; inset:0; height:100%; max-height:none; object-fit:cover; object-position:28% center }
-}
 
 /* Scene overlays share the original illustration's box. Only the image sets its height. */
 .panel { position:relative }
 .scene-film,.air,.scene-action { position:absolute; inset:0; width:100%; height:100% }
 .scene-film { object-fit:contain; pointer-events:none; opacity:0 }
 .scene-film.is-playing { opacity:1 }
-@media(min-width:800px) {
-  body:not(.forum-embed) #temper .panel img { object-fit:contain; object-position:center }
-}
 .scene-action { display:none }
 .motion-ready .scene-action { display:flex; align-items:flex-end; justify-content:flex-end; padding:12px; touch-action:pan-y }
 .scene-action span { color:#fff9eb; background:#302a32eb; border-radius:20px; padding:6px 12px; font:600 12px/1.5 system-ui,sans-serif }
@@ -128,4 +120,25 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
 @keyframes fireglow { 0%,66% { opacity:.22 } 30%,100% { opacity:.64 } }
 @media(prefers-reduced-motion:reduce) {
   .air,.scene-film,.motion-ready .scene-action { display:none }
+}
+
+/* The portrait plates in a forum post keep their original proportions, like the landscapes. */
+.forum-embed :is(.cover,.portrait):not([hidden]) { display:block; max-width:none }
+.forum-embed :is(.cover,.portrait) .panel { height:auto; min-height:0 }
+.forum-embed :is(.cover,.portrait) .panel img { position:static; height:auto; max-height:none; object-fit:contain }
+.forum-embed :is(.cover,.portrait) .copy { width:min(100%,860px); margin:auto }
+
+.soundtrack:not([hidden]) { display:flex; align-items:center; gap:14px; position:relative; margin-left:auto }
+.music-toggle,.journey-music { display:inline-flex; gap:7px; align-items:center; color:var(--accent) }
+.journey-music[hidden] { display:none }
+.play-icon { width:1.3em; font-size:.9em; text-align:center }
+.volume { display:flex; align-items:center; gap:6px; font-size:12px }
+.volume input { width:74px; height:26px; margin:0; accent-color:var(--accent) }
+.volume input:focus-visible { outline:2px solid var(--accent); outline-offset:2px }
+.journey-music { margin-right:18px }
+.music-error:not(:empty) { position:absolute; top:100%; right:0; z-index:2; padding:4px 10px; background:var(--paper); border:1px solid var(--line); font-size:12px }
+@media(max-width:760px){
+  header { flex-wrap:wrap; gap:0 8px }
+  header .soundtrack:not([hidden]) { order:1; flex-basis:100%; justify-content:space-between; margin:0; border-top:1px solid var(--line) }
+  header .music-toggle { font-size:13px; padding-block:7px }
 }
