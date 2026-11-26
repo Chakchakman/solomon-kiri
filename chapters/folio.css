@@ -122,33 +122,41 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
   .air,.scene-film,.motion-ready .scene-action { display:none }
 }
 
-/* The first two forum spreads pair a modest portrait with the profile. */
+/* Use the reading pane as the height reference, excluding both navigation bars. */
+.forum-embed:is([data-page="beginning"],[data-page="face"]) #reader { container-type:size }
 .forum-embed :is(.cover,.portrait):not([hidden]) {
   display:grid;
-  max-width:1020px;
-  padding:clamp(20px,4vw,48px);
-  gap:clamp(22px,4vw,48px);
-  align-content:center;
-  align-items:center;
+  max-width:1280px;
+  align-content:stretch;
 }
-.forum-embed .cover { grid-template-columns:minmax(0, min(34%, 300px)) minmax(0,1fr) }
-.forum-embed .portrait { grid-template-columns:minmax(0,1fr) minmax(0, min(35%, 320px)) }
-.forum-embed :is(.cover,.portrait) .panel { height:auto; min-height:0; border-radius:4px }
-.forum-embed :is(.cover,.portrait) .panel img { position:static; height:auto; object-fit:contain }
-.forum-embed :is(.cover,.portrait) .copy { width:auto; padding:0 }
-.forum-embed .cover h1 { font-size:clamp(36px,6vw,72px) }
-.forum-embed .portrait h2 { font-size:clamp(32px,4.6vw,54px) }
+.forum-embed .cover { grid-template-columns:minmax(0,min(46%,75cqh)) minmax(0,1fr) }
+.forum-embed .portrait { grid-template-columns:minmax(0,1fr) minmax(0,min(46%,100cqh)) }
+.forum-embed :is(.cover,.portrait) .panel {
+  position:sticky;
+  top:0;
+  align-self:start;
+  min-height:0;
+  height:100cqh;
+}
+.forum-embed :is(.cover,.portrait) .panel img { height:100%; object-fit:cover }
+.forum-embed .cover .panel img { object-position:48% 30% }
+.forum-embed .portrait .panel img { object-position:55% 46% }
+.forum-embed :is(.cover,.portrait) .copy { padding:clamp(20px,4vw,62px) }
+.forum-embed .cover h1 { font-size:clamp(36px,6vw,76px) }
+.forum-embed .portrait h2 { font-size:clamp(32px,4.6vw,58px) }
 
-/* Wrap the text around a smaller portrait when two long columns would be too narrow. */
-@media(max-width:600px) {
-  .forum-embed :is(.cover,.portrait):not([hidden]) { display:flow-root; padding:clamp(14px,4vw,24px) }
-  .forum-embed :is(.cover,.portrait) .panel { width:34%; max-width:164px }
-  .forum-embed .cover .panel { float:left; margin:0 15px 12px 0 }
-  .forum-embed .portrait .panel { float:right; margin:0 0 10px 15px }
-  .forum-embed .cover h1 { font-size:clamp(28px,7.8vw,42px) }
-  .forum-embed .cover blockquote { display:flow-root; padding-left:8px }
-  .forum-embed .cover dl { clear:both }
-  .forum-embed .portrait h2 { font-size:clamp(26px,6.6vw,36px); text-wrap:initial }
+@media(max-width:640px) {
+  .forum-embed .cover { grid-template-columns:37% minmax(0,1fr) }
+  .forum-embed .portrait { grid-template-columns:minmax(0,1fr) 36% }
+  .forum-embed :is(.cover,.portrait) .copy { padding:22px clamp(12px,3vw,20px) }
+  .forum-embed .cover h1 { font-size:clamp(29px,6.6vw,42px) }
+  .forum-embed .portrait h2 { font-size:clamp(26px,5.6vw,36px) }
+  .forum-embed .portrait .copy p:not(.kicker) { font-size:16px; line-height:1.48 }
+  .forum-embed .portrait .panel img { object-position:45% center }
+}
+@media(max-width:480px) {
+  .forum-embed .cover dl { grid-template-columns:1fr; gap:6px }
+  .forum-embed .cover blockquote { padding-left:9px; font-size:16px }
 }
 
 .soundtrack:not([hidden]) { display:flex; align-items:center; gap:14px; position:relative; margin-left:auto }
