@@ -25,6 +25,13 @@ function show(index) {
 function fromHash() {
   show(pages.findIndex(page => '#' + page.id === location.hash));
 }
+if (window.parent !== window) {
+  const parentURL = location.ancestorOrigins?.[0] || document.referrer;
+  const host = /^https?:\/\//i.test(parentURL) ? new URL(parentURL).hostname : '';
+  const forum = host === 'zamorie.com' || host.endsWith('.zamorie.com');
+  const markedEmbed = !host && new URLSearchParams(location.search).get('embed') === 'forum';
+  document.body.classList.toggle('forum-embed', forum || markedEmbed);
+}
 document.body.classList.add('ready');
 fromHash();
 window.addEventListener('hashchange', fromHash);
