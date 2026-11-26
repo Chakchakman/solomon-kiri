@@ -11,6 +11,7 @@ let current = 0;
 function show(index) {
   current = Math.max(0, Math.min(index, pages.length - 1));
   const active = pages[current];
+  document.body.dataset.page = active.id;
   for (const page of pages) page.hidden = page !== active;
   for (const link of links) {
     if (link.hash === '#' + active.id) link.setAttribute('aria-current', 'page');
