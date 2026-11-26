@@ -93,7 +93,8 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
 .study .detail-art { height:125px; background-image:url("art/4.1.webp"); background-repeat:no-repeat; background-size:200% auto }
 .study .spikes { background-position:85% 18% }
 .study .bell { background-position:0% 100% }
-#path .panel img { max-height:none }
+#origins-story { max-width:none }
+#origins-story .panel img, #path .panel img { max-height:none }
 @media(min-width:800px) {
   #temper { grid-template-columns:44% 56%; align-content:stretch }
   #temper .panel { position:relative }
