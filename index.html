@@ -1,7 +1,5 @@
 <!doctype html>
 <html class="scroll-only" lang="ru"><head><meta charset="utf-8"><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"><meta content="#101e2c" name="theme-color"><meta content="Зимняя летопись Соломона Кири — акварельный свиток Синего демона." name="description">
-<!-- Set the exact trusted forum origin here, e.g. https://forum.example.com. No trailing slash. -->
-<meta content="" name="solomon-parent-origin">
 <title>Зимняя летопись — Соломон «Сол» Кири</title>
 <style>:root{--ink:#302f3b;--wine:#733b50;--blue:#425c7c;--paper:#eee6d6;--scene-height:100vh;--view-top:0px;color-scheme:light}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:32px}html{overflow-x:clip}html.is-embedded{overflow:hidden}body{margin:0;background:#101e2c;color:var(--ink);font:18px/1.8 Georgia,'Times New Roman',serif}button,input,select{font:inherit}button,a,input,summary,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,[contenteditable]:focus-visible{outline:2px solid #587bac;outline-offset:5px}::selection{background:#804a65;color:#fff9e8}[hidden]{display:none!important}img{max-width:100%}button{touch-action:manipulation}
@@ -226,7 +224,11 @@ html:not(.effects-off):not(.page-hidden) .folio-page:not([hidden]) :is(img.quiet
 @media(max-width:520px){#beginning .opening-copy h1{font-size:clamp(25px,7vw,36px)}#beginning .stats{grid-template-columns:1fr}#beginning .opening-copy .stamp{display:none}}
 .claw-seal{display:flex;align-items:center;justify-content:center;gap:15px;margin:clamp(16px,4vh,45px) auto 4px;width:min(76%,440px);color:#626878}
 .claw-seal:before,.claw-seal:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,currentColor)}.claw-seal:after{transform:scaleX(-1)}
-.folio-ready .paper-inner:has(#path:not([hidden])){padding-inline:0}
+/* Only the final panorama extends beyond the normal reading margins. */
+.folio-ready .paper-inner{--folio-inset:clamp(18px,4vw,48px);padding-inline:var(--folio-inset)}
+@media(max-width:740px){.folio-ready .paper-inner{--folio-inset:18px}}
+@media(max-width:380px){.folio-ready .paper-inner{--folio-inset:13px}}
+.folio-viewport:has(>#path:not([hidden])){margin-inline:calc(-1 * var(--folio-inset))}
 .folio-ready #path .story-row{display:flex;flex-direction:column;align-items:stretch;margin-inline:0}
 .folio-ready #path .story-row .prose{order:0;padding-inline:clamp(18px,5vw,52px);box-sizing:border-box}
 .folio-ready #path .illustration.landscape{order:1;width:100%;max-width:none;margin:8px 0}
@@ -242,7 +244,7 @@ html:not(.effects-off) #stranger .fire-lit .scene-air.sparks{display:block;left:
 .folio-ready #origins-story .tribe-spread{display:block;min-height:0}
 .tribe-camp{width:100%;margin:clamp(12px,2vw,24px) 0 0}
 .tribe-camp img{display:block;width:100%;height:auto;mix-blend-mode:multiply;mask-image:linear-gradient(transparent,black 4%,black 96%,transparent)}
-</style><style type="text/css" id="custom-page-zoom-css"></style><style>
+</style><style>
 #beginning .gaze{mask-image:linear-gradient(to bottom,#000 90%,transparent);mix-blend-mode:normal}
 #beginning .gaze img{mix-blend-mode:normal}
 .shoulder-snow{position:absolute;top:34%;left:21%;width:3px;height:3px;background:#f4fcff;border-radius:50%;opacity:0;pointer-events:none;box-shadow:-9px 4px 1px #cbdbe9,6px -3px 0 #fff,-14px 8px 1px #eef8ff,14px -6px 0 #d5e3f0,22px -9px 1px #fff,2px 6px 1px #d2e7f8}
@@ -256,8 +258,14 @@ html:not(.effects-off) #stranger .fire-lit .scene-air.sparks{display:block;left:
 </style><style media="screen">
 html.scroll-only,html.scroll-only body,.scroll-only .page-wrap,.scroll-only .scroll-frame,.scroll-only.folio-ready .paper{height:100%;overflow:hidden;margin:0;padding:0}
 .scroll-only .roller{display:none}
-.scroll-only.folio-ready .folio-viewport{overflow-anchor:none;scrollbar-gutter:stable;overscroll-behavior-y:contain}
-</style></head><style type="text/css" id="custom-page-zoom-css"></style><body><div class="page-wrap"><main class="scroll-frame" id="theScroll">
+.scroll-only.folio-ready .folio-page{overflow-x:clip}
+@media(max-width:520px){
+  .folio-ready #beginning .stat dt{letter-spacing:.06em}
+  .folio-ready #beginning .stats{row-gap:4px}
+  .folio-ready #beginning .stat{padding-bottom:3px}
+}
+.scroll-only.folio-ready .folio-viewport{overflow-anchor:none;scrollbar-gutter:stable;overscroll-behavior-y:auto}
+</style></head><body><div class="page-wrap"><main class="scroll-frame" id="theScroll">
 <div aria-hidden="true" class="roller roller-top"><div class="roller-ribbon"></div><div class="roller-ribbon ribbon-two"></div></div>
 <article class="paper" id="paper">
 <div class="paper-bruise bruise-one"></div><div class="paper-bruise bruise-two"></div>
