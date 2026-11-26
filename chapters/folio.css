@@ -24,7 +24,7 @@
   --paper:#e9f0e7; --ink:#29382d; --accent:#3d624d; --mat:#d3e1d2;
 }
 #stranger, body[data-page="stranger"] {
-  --paper:#332f42; --ink:#f6ede2; --accent:#ffbd81; --mat:#272737;
+  --paper:#fbefe2; --ink:#352c35; --accent:#894923; --mat:#ead8c9;
 }
 #path, body[data-page="path"] {
   --paper:#f4f3da; --ink:#313522; --accent:#59621b; --mat:#e4e7c8;
@@ -193,6 +193,11 @@ body:not(.ready) footer,body:not(.ready) #contents { display:none }
   html[data-scheme="dark"] body { --line:#635c65 }
 }
 @media(max-width:480px) {
+  /* Keep page controls within reach even when the post reserves an 800px frame. */
+  body.ready { grid-template-areas:"header" "navigation" "reading"; grid-template-rows:auto auto minmax(0,1fr) }
+  body.ready > header { grid-area:header }
+  body.ready > main { grid-area:reading }
+  body.ready > footer { grid-area:navigation; border-top:0; border-bottom:1px solid var(--line) }
   header,footer { padding-inline:clamp(8px,3vw,14px) }
   #contents,.music-toggle,.volume,.volume input,.menu-head button,dialog li a { min-height:44px }
   #contents { padding-inline:6px; font-size:13px }
