@@ -21,6 +21,7 @@ function show(index) {
   next.disabled = current === pages.length - 1;
   count.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(pages.length).padStart(2, '0');
   reader.scrollTop = 0;
+  reader.dispatchEvent(new Event('spreadchange'));
 }
 function fromHash() {
   show(pages.findIndex(page => '#' + page.id === location.hash));
@@ -45,8 +46,26 @@ for (const link of links) {
     show(pages.findIndex(page => '#' + page.id === link.hash));
   });
 }
+// Handle taps on chapter markers directly, including the tap after a touch swipe.
+const markers = document.querySelector('footer nav');
+let markerTouch;
+markers.addEventListener('touchstart', event => {
+  const finger = event.touches[0];
+  markerTouch = event.touches.length === 1 ? [finger.clientX, finger.clientY] : null;
+}, {passive:true});
+markers.addEventListener('touchcancel', () => { markerTouch = null; });
+markers.addEventListener('touchend', event => {
+  const link = event.target.closest('a');
+  const finger = event.changedTouches[0];
+  if (markerTouch && link && event.cancelable &&
+      Math.hypot(finger.clientX-markerTouch[0], finger.clientY-markerTouch[1]) < 10) {
+    event.preventDefault();
+    link.click();
+  }
+  markerTouch = null;
+}, {passive:false});
 document.addEventListener('keydown', event => {
-  if (menu.open || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+  if (menu.open || event.target.matches('input[type="range"]') || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
   if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
     event.preventDefault();
     show(current + (event.key === 'ArrowLeft' ? -1 : 1));
